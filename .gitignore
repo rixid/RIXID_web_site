@@ -1,0 +1,10 @@
+# Notes internes : jamais dans un depot public
+DEPLOIEMENT.md
+
+# Outillage local, inutile sur le site
+assets/generer-og.py
+
+# Systeme
+Thumbs.db
+desktop.ini
+.DS_Store
