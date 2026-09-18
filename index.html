@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Rixid — Conception stratégique et résolution de problèmes complexes</title>
+<meta name="description" content="Rixid intervient en conception stratégique et en résolution de problèmes complexes : problématiques mal définies, optimisation, développement intégral de solutions, de l'idéation jusqu'à la réalisation. Québec, Canada.">
+
+<link rel="canonical" href="https://rixid.ca/">
+<meta name="theme-color" content="#0A0D13">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/rixid-logo.png">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_CA">
+<meta property="og:site_name" content="Rixid">
+<meta property="og:url" content="https://rixid.ca/">
+<meta property="og:title" content="Rixid — Conception stratégique et résolution de problèmes complexes">
+<meta property="og:description" content="Là où les solutions conventionnelles atteignent leur limite.">
+<meta property="og:image" content="https://rixid.ca/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RIXID — couleurs officielles : noir #0D0D0D · bleu #0A66FF · gris #808080
+   ============================================================ */
+
+:root{
+  --paper:     #F7F6F3;   /* crème chaud d'origine */
+  --surface:   #FFFFFF;
+  --ink:       #0D0D0D;   /* noir de marque */
+  --ink-soft:  #494F58;
+  --ink-faint: #666C75;
+  --navy:      #0A66FF;   /* bleu de marque */
+  --rule:      #E0DCD4;   /* filet accordé au crème */
+
+  --night:     #0A0D13;   /* noir bleuté d'origine */
+  --night-2:   #10141D;
+  --line:      #4D8DFF;   /* bleu éclairci, fonds sombres */
+  --amber:     #0A66FF;
+  --amber-ink: #0A4FC4;   /* bleu assombri, 6,6:1 sur fond clair */
+  --gris:      #808080;
+
+  --shell: 1240px;
+  --gutter: clamp(20px, 5vw, 68px);
+
+  --mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans:    "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --display: "Space Grotesk", "Inter", -apple-system, "Segoe UI", Arial, sans-serif;
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:17px; line-height:1.64;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+img{ max-width:100%; height:auto; display:block; }
+a{ color:inherit; }
+h1,h2,h3{ font-family:var(--display); font-weight:700; letter-spacing:-.03em; line-height:1.04; margin:0; text-wrap:balance; }
+p{ margin:0; text-wrap:pretty; }
+::selection{ background:var(--navy); color:#fff; }
+:focus-visible{ outline:2px solid currentColor; outline-offset:3px; }
+
+.shell{ width:100%; max-width:var(--shell); margin-inline:auto; padding-inline:var(--gutter); }
+
+.tag{
+  font-family:var(--mono); font-size:11px; font-weight:500;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--ink-faint);
+  display:inline-flex; align-items:center; gap:.75em;
+}
+.tag::before{ content:""; width:18px; height:1px; background:var(--amber-ink); flex:none; }
+.hero .tag::before, .contact .tag::before{ background:var(--amber); }
+
+.btn{
+  display:inline-flex; align-items:center; gap:.6em;
+  font-size:15px; font-weight:600; letter-spacing:-.01em;
+  padding:.9em 1.6em; border:1px solid transparent; border-radius:2px;
+  text-decoration:none; cursor:pointer; white-space:nowrap;
+  transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+}
+.btn svg{ transition:transform .3s var(--ease); }
+.btn:hover svg{ transform:translateX(4px); }
+.btn--light{ background:#fff; color:var(--night); }
+.btn--light:hover{ background:#D6E4FF; }
+.btn--wire{ border-color:rgba(255,255,255,.28); color:#fff; }
+.btn--wire:hover{ border-color:#fff; }
+
+/* ---------- en-tête ---------- */
+.hdr{
+  position:absolute; top:0; left:0; right:0; z-index:60;
+  border-bottom:1px solid transparent;
+  transition:background .35s var(--ease), border-color .35s var(--ease);
+}
+.hdr--stuck{
+  position:fixed; background:rgba(10,13,19,.82);
+  backdrop-filter:saturate(160%) blur(16px);
+  -webkit-backdrop-filter:saturate(160%) blur(16px);
+  border-bottom-color:rgba(255,255,255,.1);
+  animation:descend .35s var(--ease);
+}
+@keyframes descend{ from{ transform:translateY(-100%); } to{ transform:none; } }
+.hdr__in{ display:flex; align-items:center; gap:28px; height:82px; }
+.hdr__logo{ display:block; padding-block:10px; }   /* cible tactile de 44 px */
+.hdr__logo img{ width:124px; }
+
+.nav{ margin-left:auto; display:flex; align-items:center; gap:32px; }
+.nav a{
+  font-size:14px; font-weight:500; text-decoration:none;
+  color:rgba(255,255,255,.72); position:relative; padding-block:5px;
+  transition:color .2s var(--ease);
+}
+.nav a::after{
+  content:""; position:absolute; left:0; bottom:0; width:100%; height:1px;
+  background:#fff; transform:scaleX(0); transform-origin:right;
+  transition:transform .35s var(--ease);
+}
+.nav a:hover{ color:#fff; }
+.nav a:hover::after{ transform:scaleX(1); transform-origin:left; }
+.hdr .btn{ padding:.7em 1.25em; font-size:13.5px; }
+@media (max-width:940px){ .nav{ display:none; } }
+
+/* ============================================================
+   HERO — énoncé typographique, sans illustration
+   ============================================================ */
+.hero{
+  position:relative; background:var(--night); color:#fff;
+  padding-block:calc(82px + clamp(72px,11vw,152px)) clamp(60px,8vw,104px);
+  overflow:hidden;
+}
+.hero::before{
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.14) 1px, transparent 1px);
+  background-size:52px 52px;
+}
+.hero::after{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(115% 90% at 78% 30%, rgba(110,147,214,.38), transparent 62%);
+}
+.hero__in{ position:relative; z-index:2; }
+
+.hero .tag{ color:rgba(255,255,255,.62); }
+.hero h1{
+  font-size:clamp(2.7rem, 7.2vw, 5.6rem);
+  max-width:19ch;
+  margin-block:32px 0;
+}
+.hero h1 em{ font-style:normal; color:var(--line); }
+
+.hero__lower{
+  display:grid; grid-template-columns:minmax(0,1fr) auto;
+  gap:clamp(28px,4vw,56px); align-items:end;
+  margin-top:clamp(40px,5vw,60px);
+}
+@media (max-width:860px){
+  .hero__lower{ grid-template-columns:1fr; align-items:start; gap:32px; }
+}
+.hero__lede{
+  font-size:clamp(1.06rem,1.45vw,1.22rem);
+  color:rgba(255,255,255,.7); max-width:54ch;
+}
+.hero__cta{ display:flex; flex-wrap:wrap; gap:13px; }
+
+.hero__meta{
+  position:relative; z-index:2;
+  margin-top:clamp(56px,7vw,88px); padding-top:26px;
+  border-top:1px solid rgba(255,255,255,.14);
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px;
+}
+@media (max-width:760px){ .hero__meta{ grid-template-columns:1fr; gap:22px; } }
+.hero__meta span{
+  display:block; font-family:var(--mono); font-size:11px; letter-spacing:.15em;
+  text-transform:uppercase; color:rgba(255,255,255,.58); margin-bottom:7px;
+}
+.hero__meta strong{
+  font-family:var(--display); font-weight:600; font-size:1.04rem;
+  letter-spacing:-.015em; color:#fff;
+}
+
+/* ============================================================
+   SECTIONS CLAIRES
+   ============================================================ */
+.sec{ padding-block:clamp(84px,10vw,140px); }
+.sec--white{ background:var(--surface); border-block:1px solid var(--rule); }
+
+.sec__head{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.92fr);
+  gap:clamp(28px,4vw,64px); align-items:end;
+  margin-bottom:clamp(52px,6vw,80px);
+}
+@media (max-width:900px){ .sec__head{ grid-template-columns:1fr; align-items:start; gap:20px; } }
+.sec__head h2{ font-size:clamp(2rem,3.6vw,2.95rem); margin-top:20px; }
+.sec__head p{ color:var(--ink-soft); font-size:1.03rem; max-width:48ch; padding-bottom:.4em; }
+
+/* ---------- champs d'intervention ---------- */
+.fields{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0;
+         border-top:1px solid var(--rule); }
+@media (max-width:900px){ .fields{ grid-template-columns:1fr; border-top:0; } }
+.field-i{ padding:34px 44px 12px 0; }
+@media (max-width:900px){ .field-i{ border-top:1px solid var(--rule); padding-right:0; } }
+.field-i__n{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; color:var(--amber-ink); }
+.field-i h3{ font-size:clamp(1.3rem,1.9vw,1.55rem); margin-block:16px 16px; }
+
+/* entrée de dictionnaire */
+.field-i__def{
+  font-style:italic; font-size:.97rem; color:var(--ink-soft);
+  padding-left:15px; border-left:2px solid var(--rule);
+  margin-bottom:20px;
+}
+.field-i__gram{
+  font-family:var(--mono); font-style:normal; font-size:10.5px;
+  letter-spacing:.1em; color:var(--ink-faint);
+}
+/* contrepoint Rixid */
+.field-i__twist{ color:var(--ink-soft); font-size:1rem; }
+.field-i__twist b{
+  display:block; font-family:var(--mono); font-weight:500; font-size:10.5px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--amber-ink);
+  margin-bottom:8px;
+}
+
+/* ---------- types de mandat ---------- */
+.mandats{
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 clamp(30px,4vw,72px);
+}
+@media (max-width:760px){ .mandats{ grid-template-columns:1fr; } }
+.mandats li{
+  display:flex; align-items:baseline; gap:18px;
+  padding-block:19px; border-top:1px solid var(--rule);
+  font-size:1.05rem; letter-spacing:-.01em; color:var(--ink);
+}
+.mandats__n{
+  font-family:var(--mono); font-size:11px; letter-spacing:.12em;
+  color:var(--amber-ink); flex:none;
+}
+.mandats__note{
+  margin-top:26px; font-family:var(--mono); font-size:11px;
+  letter-spacing:.06em; color:var(--ink-faint);
+}
+
+/* ---------- l'echelle des couts ---------- */
+.cout{ width:100%; margin-top:clamp(40px,5vw,60px); }
+.cout__titre{
+  font-family:var(--mono); font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-faint); margin-bottom:22px;
+}
+.cout__grille{
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  border-top:1px solid var(--rule);
+}
+@media (max-width:720px){ .cout__grille{ grid-template-columns:1fr; } }
+.cout__cellule{
+  padding:26px 28px 28px; border-bottom:1px solid var(--rule);
+  border-right:1px solid var(--rule);
+}
+.cout__cellule:last-child{ border-right:0; }
+@media (max-width:720px){ .cout__cellule{ border-right:0; } }
+.cout__cellule--fort{
+  background:color-mix(in srgb, var(--navy) 5%, transparent);
+  box-shadow:inset 3px 0 0 var(--navy);
+}
+.cout__montant{
+  display:block; font-family:var(--display); font-weight:700;
+  font-size:clamp(2.1rem,4vw,3.1rem); line-height:1;
+  letter-spacing:-.03em; color:var(--ink);
+}
+.cout__cellule--fort .cout__montant{ color:var(--navy); }
+.cout__quand{
+  display:block; margin-top:12px; font-size:.95rem; color:var(--ink-soft);
+}
+.cout__note{
+  margin-top:24px; font-size:1.02rem; color:var(--ink-soft); max-width:62ch;
+}
+.cout__note strong{ color:var(--ink); font-weight:600; }
+.cout__source{
+  margin-top:14px; font-family:var(--mono); font-size:10.5px;
+  letter-spacing:.06em; color:var(--ink-faint);
+}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact{ background:var(--night); color:#fff; padding-block:clamp(80px,9vw,128px); position:relative; overflow:hidden; }
+.contact::before{
+  content:""; position:absolute; inset:0;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.14) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.14) 1px, transparent 1px);
+  background-size:52px 52px;
+  -webkit-mask-image:radial-gradient(105% 78% at 22% 0%, #000, transparent 70%);
+          mask-image:radial-gradient(105% 78% at 22% 0%, #000, transparent 70%);
+}
+.contact > *{ position:relative; z-index:2; }
+.contact .tag{ color:rgba(255,255,255,.62); }
+.contact h2{ font-size:clamp(2rem,3.6vw,2.95rem); margin-block:22px 20px; }
+.contact__lede{ color:rgba(255,255,255,.72); max-width:44ch; }
+.contact__grid{ display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1fr); gap:clamp(40px,6vw,86px); align-items:start; }
+@media (max-width:860px){ .contact__grid{ grid-template-columns:1fr; } }
+
+.coords{ margin-top:38px; display:flex; flex-direction:column; gap:22px; }
+.coords a, .coords > span{ text-decoration:none; color:#fff; display:block; }
+.coords .k{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.15em; text-transform:uppercase;
+  color:rgba(255,255,255,.68); margin-bottom:6px; display:block;
+}
+.coords .v{ font-size:1.08rem; font-weight:500; letter-spacing:-.01em; }
+.coords a .v{ border-bottom:1px solid rgba(255,255,255,.3); display:inline-block; transition:border-color .25s var(--ease); }
+.coords a:hover .v{ border-color:#fff; }
+
+.form{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.15); padding:clamp(26px,3.4vw,38px); }
+.field{ margin-bottom:19px; }
+.field label{
+  display:block; font-family:var(--mono); font-size:10.5px; letter-spacing:.15em;
+  text-transform:uppercase; color:rgba(255,255,255,.68); margin-bottom:9px;
+}
+.field input, .field textarea{
+  width:100%; font-family:var(--sans); font-size:16px; color:#fff;
+  background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.2);
+  border-radius:2px; padding:12px 14px;
+  transition:border-color .25s var(--ease), background .25s var(--ease);
+}
+.field textarea{ resize:vertical; min-height:118px; }
+.field input:focus, .field textarea:focus{
+  outline:none; border-color:rgba(255,255,255,.78); background:rgba(0,0,0,.3);
+}
+.field input::placeholder, .field textarea::placeholder{ color:rgba(255,255,255,.48); }
+.hp{ position:absolute; left:-9999px; opacity:0; height:0; }
+.form .btn{ width:100%; justify-content:center; }
+.form__note{ font-family:var(--mono); font-size:10.5px; color:rgba(255,255,255,.62); margin-top:14px; text-align:center; }
+.form__msg{ margin-top:15px; padding:13px 15px; font-size:14.5px; border-radius:2px; display:none; }
+.form__msg[data-state="ok"]{ display:block; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.32); }
+.form__msg[data-state="err"]{ display:block; background:rgba(10,102,255,.22); border:1px solid rgba(77,141,255,.6); }
+
+/* ---------- pied ---------- */
+.ftr{ background:var(--night-2); color:rgba(255,255,255,.6); padding-block:40px; font-size:13px; border-top:1px solid rgba(255,255,255,.08); }
+.ftr__in{ display:flex; flex-wrap:wrap; align-items:center; gap:22px 34px; }
+.ftr img{ width:150px; opacity:.9; }
+.ftr__legal, .ftr__right{ font-family:var(--mono); font-size:11px; letter-spacing:.04em; }
+.ftr__right{ margin-left:auto; }
+@media (max-width:700px){ .ftr__right{ margin-left:0; } }
+
+/* --- apparition au défilement --- */
+.rise{
+  opacity:0; transform:translateY(24px);
+  transition:opacity .75s var(--ease), transform .75s var(--ease);
+}
+.rise.is-in{ opacity:1; transform:none; }
+
+/* titres : révélation sous masque, l'effet d'étirement */
+.reveal{
+  opacity:0; transform:translateY(24px);
+  clip-path:inset(0 0 16% 0);
+  transition:opacity .9s var(--ease), transform .9s var(--ease), clip-path 1s var(--ease);
+}
+.reveal.is-in{ opacity:1; transform:none; clip-path:inset(0 0 0 0); }
+
+/* le filet des étiquettes se déploie */
+.tag.rise::before{ transform:scaleX(0); transform-origin:left; transition:transform .7s .15s var(--ease); }
+.tag.rise.is-in::before{ transform:scaleX(1); }
+
+
+
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  .rise, .reveal{ opacity:1; transform:none; clip-path:none; transition:none; }
+  .tag.rise::before{ transform:none; }
+  .hdr--stuck{ animation:none; }
+  *{ animation-duration:.01ms !important; transition-duration:.01ms !important; }
+}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Rixid Inc.",
+  "url": "https://rixid.ca/",
+  "image": "https://rixid.ca/assets/rixid-logo.png",
+  "description": "Conception stratégique et résolution de problèmes complexes, de l'idéation jusqu'à la réalisation.",
+  "email": "info@rixid.ca",
+  "founder": { "@type": "Person", "name": "Joël Lessard" },
+  "address": { "@type": "PostalAddress", "addressRegion": "QC", "addressCountry": "CA" },
+  "areaServed": { "@type": "AdministrativeArea", "name": "Québec, Canada" },
+  "knowsLanguage": ["fr-CA", "en-CA"]
+}
+</script>
+</head>
+
+<body>
+
+<header class="hdr" id="hdr">
+  <div class="shell hdr__in">
+    <a class="hdr__logo" href="#top" aria-label="Rixid Innovation — accueil">
+      <img src="assets/rixid-logo-blanc.png" alt="Rixid Innovation" width="330" height="132">
+    </a>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="#interventions">Interventions</a>
+      <a href="#mandats">Mandats</a>
+      <a href="#cout">Coûts</a>
+    </nav>
+    <a class="btn btn--light" href="#contact">
+      Prendre contact
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5h11M8.5 1.5L12 5l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="shell hero__in">
+
+    <span class="tag rise">Conception stratégique &middot; Résolution de problèmes complexes</span>
+
+    <h1 class="reveal">Là où les solutions conventionnelles atteignent leur <em>limite</em>.</h1>
+
+    <div class="hero__lower">
+      <p class="hero__lede rise">
+        Rixid intervient en conception stratégique et en résolution créative de problèmes
+        complexes, de l'idéation jusqu'à la réalisation, en alliant vision entrepreneuriale
+        et excellence opérationnelle.
+      </p>
+      <div class="hero__cta rise">
+        <a class="btn btn--light" href="#contact">
+          Soumettre une problématique
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5h11M8.5 1.5L12 5l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn btn--wire" href="#interventions">Champs d'intervention</a>
+      </div>
+    </div>
+
+    <div class="hero__meta rise">
+      <div><span>Portée</span><strong>De l'idéation jusqu'à la réalisation</strong></div>
+      <div><span>Domaines</span><strong>Produit, procédé, système</strong></div>
+      <div><span>Format</span><strong>Mandat ponctuel ou continu</strong></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================ INTERVENTIONS ============================ -->
+<section class="sec sec--white" id="interventions">
+  <div class="shell">
+
+    <div class="sec__head">
+      <div>
+        <span class="tag rise">Champs d'intervention</span>
+        <h2 class="reveal">Innover.<br>Inventer.<br>Valoriser.</h2>
+      </div>
+      <p class="rise">
+        Les problèmes simples ont déjà leur solution.
+        Rixid intervient sur les autres.
+      </p>
+    </div>
+
+    <div class="fields">
+
+      <article class="field-i rise">
+        <span class="field-i__n">01</span>
+        <h3>Innovation</h3>
+        <p class="field-i__def"><span class="field-i__gram">n.&#8239;f.</span>&#8239;— Introduction d'une nouveauté dans une pratique établie.</p>
+        <p class="field-i__twist"><b>Chez Rixid</b>La nouveauté est rarement dans le résultat. Elle est dans la façon de l'obtenir.</p>
+      </article>
+
+      <article class="field-i rise">
+        <span class="field-i__n">02</span>
+        <h3>Invention</h3>
+        <p class="field-i__def"><span class="field-i__gram">n.&#8239;f.</span>&#8239;— Création de quelque chose qui n'existait pas.</p>
+        <p class="field-i__twist"><b>Chez Rixid</b>Ce qui n'existe pas ne s'achète nulle part. Il faut le concevoir, l'éprouver, puis le protéger.</p>
+      </article>
+
+      <article class="field-i rise">
+        <span class="field-i__n">03</span>
+        <h3>Valorisation</h3>
+        <p class="field-i__def"><span class="field-i__gram">n.&#8239;f.</span>&#8239;— Action de donner plus de valeur à quelque chose.</p>
+        <p class="field-i__twist"><b>Chez Rixid</b>Le vrai livrable n'est pas la solution. C'est ce qu'elle vous fait gagner.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TYPES DE MANDAT ============================ -->
+<section class="sec" id="mandats">
+  <div class="shell">
+
+    <div class="sec__head">
+      <div>
+        <span class="tag rise">Types de mandat</span>
+        <h2 class="reveal">Ce que l'on<br>confie à Rixid.</h2>
+      </div>
+      <p class="rise">
+        Cette liste n'est pas fermée. Les mandats les plus intéressants
+        commencent souvent par une demande qui n'y figure pas.
+      </p>
+    </div>
+
+    <div class="rise">
+      <ul class="mandats">
+        <li><span class="mandats__n">01</span>Conception de produit</li>
+        <li><span class="mandats__n">02</span>Optimisation manufacturière</li>
+        <li><span class="mandats__n">03</span>Optimisation des processus internes</li>
+        <li><span class="mandats__n">04</span>Simplification des méthodes de travail</li>
+        <li><span class="mandats__n">05</span>Implantation d'outils d'intelligence artificielle</li>
+        <li><span class="mandats__n">06</span>Diagnostic&#8239;: trouver le vrai problème</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================ LE MOMENT DÉCISIF ============================ -->
+<section class="sec sec--white" id="cout">
+  <div class="shell">
+
+    <div class="sec__head">
+      <div>
+        <span class="tag rise">Le moment décisif</span>
+        <h2 class="reveal">Le prix d'une erreur<br>dépend du jour<br>où on la trouve.</h2>
+      </div>
+      <p class="rise">
+        Tout se joue à la conception. La forme donnée à une solution fixe son coût
+        de production et celui de son cycle de vie entier, bien avant la première unité.
+      </p>
+    </div>
+
+  <div class="cout rise">
+      <p class="cout__titre">Le coût d'une même erreur, selon le moment où on la trouve</p>
+      <div class="cout__grille">
+        <div class="cout__cellule cout__cellule--fort">
+          <span class="cout__montant">1&nbsp;$</span>
+          <span class="cout__quand">détectée à la conception</span>
+        </div>
+        <div class="cout__cellule">
+          <span class="cout__montant">10&nbsp;$</span>
+          <span class="cout__quand">détectée au prototype</span>
+        </div>
+        <div class="cout__cellule">
+          <span class="cout__montant">100&nbsp;$</span>
+          <span class="cout__quand">détectée une fois le produit commercialisé</span>
+        </div>
+      </div>
+      <p class="cout__note">
+        <strong>Rixid travaille au premier moment.</strong> Anticiper le problème
+        et le régler pendant qu'il ne coûte encore qu'un dollar&#8239;— avant le terrain,
+        avant le rappel, avant qu'il soit trop tard pour le reprendre.
+      </p>
+      <p class="cout__source">Règle 1-10-100, formalisée par Labovitz et Chang, <i>Making Quality Work</i> (1992).</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================ CONTACT ============================ -->
+<section class="contact" id="contact">
+  <div class="shell contact__grid">
+
+    <div>
+      <span class="tag rise">Contact</span>
+      <h2 class="reveal">Soumettre<br>une problématique.</h2>
+      <p class="contact__lede rise">
+        La première consultation est sans frais et n'engage à rien.
+      </p>
+      <div class="coords">
+        <a href="mailto:info@rixid.ca"><span class="k">Courriel</span><span class="v">info@rixid.ca</span></a>
+        <span><span class="k">Territoire</span><span class="v">Québec, Canada</span></span>
+      </div>
+    </div>
+
+    <div class="rise">
+      <form class="form" id="form">
+        <!-- ⚠️ REMPLACER par votre clé Web3Forms (gratuit) : https://web3forms.com -->
+        <input type="hidden" name="access_key" value="VOTRE_CLE_WEB3FORMS">
+        <input type="hidden" name="subject" value="Nouvelle demande depuis rixid.ca">
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off">
+
+        <div class="field">
+          <label for="f-nom">Nom</label>
+          <input id="f-nom" name="nom" type="text" required autocomplete="name" placeholder="Prénom et Nom">
+        </div>
+        <div class="field">
+          <label for="f-org">Organisation</label>
+          <input id="f-org" name="organisation" type="text" autocomplete="organization" placeholder="Compagnie">
+        </div>
+        <div class="field">
+          <label for="f-courriel">Courriel</label>
+          <input id="f-courriel" name="courriel" type="email" required autocomplete="email" placeholder="nom@email.com">
+        </div>
+        <div class="field">
+          <label for="f-msg">Exposé de la problématique</label>
+          <textarea id="f-msg" name="message" required placeholder="Description du besoin"></textarea>
+        </div>
+
+        <button class="btn btn--light" type="submit" id="submit">
+          Transmettre
+          <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5h11M8.5 1.5L12 5l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="form__note">Les informations transmises demeurent confidentielles.</p>
+        <div class="form__msg" id="msg" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="ftr">
+  <div class="shell ftr__in">
+    <img src="assets/rixid-logo-blanc.png" alt="Rixid Innovation" width="330" height="132">
+    <span class="ftr__legal">Conception stratégique et résolution de problèmes complexes &middot; Québec, Canada</span>
+    <span class="ftr__right">&copy; <span id="an">2026</span> Rixid Inc.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var an = document.getElementById("an");
+  if (an) an.textContent = new Date().getFullYear();
+
+  var hdr = document.getElementById("hdr");
+  var hero = document.querySelector(".hero");
+  var onScroll = function(){
+    hdr.classList.toggle("hdr--stuck", window.scrollY > hero.offsetHeight - 140);
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive:true });
+  window.addEventListener("resize", onScroll, { passive:true });
+
+  var reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var cibles = document.querySelectorAll(".rise, .reveal");
+
+  if (reduit || !("IntersectionObserver" in window)) {
+    cibles.forEach(function(el){ el.classList.add("is-in"); });
+  } else {
+    /* décalage progressif : les éléments d'une même section entrent en cascade */
+    var rangs = [];
+    cibles.forEach(function(el){
+      var bloc = el.closest("section") || document.body;
+      var i = rangs.indexOf(bloc);
+      if (i === -1){ i = rangs.push(bloc) - 1; rangs[i] = bloc; rangs["n" + i] = 0; }
+      var rang = rangs["n" + i];
+      rangs["n" + i] = rang + 1;
+      if (rang > 0) el.style.transitionDelay = Math.min(rang * 70, 420) + "ms";
+    });
+
+    var io = new IntersectionObserver(function(ent){
+      ent.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add("is-in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin:"0px 0px -12% 0px", threshold:0.05 });
+    cibles.forEach(function(el){ io.observe(el); });
+  }
+
+  var form = document.getElementById("form"),
+      msg = document.getElementById("msg"),
+      bouton = document.getElementById("submit");
+  var afficher = function(etat, texte){ msg.setAttribute("data-state", etat); msg.textContent = texte; };
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    if (form.querySelector('[name="access_key"]').value === "VOTRE_CLE_WEB3FORMS"){
+      afficher("err", "Le formulaire n'est pas encore configuré. Veuillez écrire à info@rixid.ca.");
+      return;
+    }
+    var libelle = bouton.innerHTML;
+    bouton.disabled = true;
+    bouton.textContent = "Transmission en cours…";
+    msg.removeAttribute("data-state");
+
+    fetch("https://api.web3forms.com/submit", {
+      method:"POST", headers:{ "Accept":"application/json" }, body:new FormData(form)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d.success){ form.reset(); afficher("ok", "Votre demande a bien été reçue. Une réponse vous parviendra sous peu."); }
+      else { afficher("err", "La transmission a échoué. Veuillez écrire à info@rixid.ca."); }
+    })
+    .catch(function(){ afficher("err", "La transmission a échoué. Veuillez écrire à info@rixid.ca."); })
+    .finally(function(){ bouton.disabled = false; bouton.innerHTML = libelle; });
+  });
+})();
+</script>
+
+</body>
+</html>
