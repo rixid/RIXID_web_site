@@ -3,6 +3,7 @@ DEPLOIEMENT.md
 
 # Outillage local, inutile sur le site
 assets/generer-og.py
+assets/generer-en.py
 
 # Systeme
 Thumbs.db
