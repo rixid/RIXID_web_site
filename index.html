@@ -8,8 +8,11 @@
 <meta name="description" content="Rixid intervient en conception stratégique et en résolution de problèmes complexes : problématiques mal définies, optimisation, développement intégral de solutions, de l'idéation jusqu'à la réalisation. Québec, Canada.">
 
 <link rel="canonical" href="https://rixid.ca/">
+<link rel="alternate" hreflang="fr-CA" href="https://rixid.ca/">
+<link rel="alternate" hreflang="en-CA" href="https://rixid.ca/en/">
+<link rel="alternate" hreflang="x-default" href="https://rixid.ca/">
 <meta name="theme-color" content="#0A0D13">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.svg?v=3" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/rixid-logo.png">
 
 <meta property="og:type" content="website">
@@ -127,7 +130,24 @@ p{ margin:0; text-wrap:pretty; }
 .nav a:hover{ color:#fff; }
 .nav a:hover::after{ transform:scaleX(1); transform-origin:left; }
 .hdr .btn{ padding:.7em 1.25em; font-size:13.5px; }
-@media (max-width:940px){ .nav{ display:none; } }
+
+/* selecteur de langue : hors de la navigation, pour rester visible sur mobile */
+.lang{
+  font-family:var(--mono); font-size:12px; font-weight:500; letter-spacing:.14em;
+  color:rgba(255,255,255,.72); text-decoration:none;
+  padding:14px 10px; border-bottom:1px solid transparent;
+  transition:color .2s var(--ease), border-color .2s var(--ease);
+}
+.lang:hover{ color:#fff; border-bottom-color:rgba(255,255,255,.5); }
+@media (max-width:940px){
+  .nav{ display:none; }
+  .lang{ margin-left:auto; }
+  .hdr__in{ gap:18px; }
+}
+@media (max-width:420px){
+  .hdr__logo img{ width:118px; }
+  .hdr .btn{ padding:.65em .95em; }
+}
 
 /* ============================================================
    HERO — énoncé typographique, sans illustration
@@ -409,8 +429,8 @@ p{ margin:0; text-wrap:pretty; }
     <nav class="nav" aria-label="Navigation principale">
       <a href="#interventions">Interventions</a>
       <a href="#mandats">Mandats</a>
-      <a href="#cout">Coûts</a>
     </nav>
+    <a class="lang" href="en/" hreflang="en" lang="en" aria-label="English version">EN</a>
     <a class="btn btn--light" href="#contact">
       Prendre contact
       <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true"><path d="M1 5h11M8.5 1.5L12 5l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -583,7 +603,7 @@ p{ margin:0; text-wrap:pretty; }
 
     <div class="rise">
       <form class="form" id="form">
-        <!-- Clé Web3Forms « Contact rixid.ca » : les demandes arrivent à joel@rixid.ca -->
+        <!-- Clé publique Web3Forms (formulaire « Contact rixid.ca ») -->
         <input type="hidden" name="access_key" value="a9ad737c-7c23-4832-b4be-ee43aa04b45f">
         <input type="hidden" name="subject" value="Nouvelle demande depuis rixid.ca">
         <input type="hidden" name="from_name" value="Site rixid.ca">
